@@ -30,12 +30,25 @@ function addMovimentacao() {
     .then(response => response.json())
     .then(data => {
         alert('Movimentação adicionada com sucesso: ' + JSON.stringify(data));
-        document.getElementById('movimentacaoForm').reset(); // Limpa o formulário após a adição
     })
     .catch(error => {
         console.error('Erro ao adicionar movimentação:', error);
     });
 }
+
+/*function getMovimentacao() {
+    const id = document.getElementById('movimentacaoId').value;
+
+    fetch(`http://localhost:8081/movimentacoes/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+    })
+    .catch(error => {
+        console.error('Erro ao buscar movimentação:', error);
+    });
+}*/
 
 function getMovimentacaoPorData() {
     const data = document.getElementById('dataMovimentacao').value;
@@ -44,13 +57,10 @@ function getMovimentacaoPorData() {
     .then(response => response.json())
     .then(data => {
         const resultadoDiv = document.getElementById('resultado');
-        if (data.length > 0) {
-            resultadoDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-        } else {
-            resultadoDiv.innerHTML = "Nenhuma movimentação encontrada para a data especificada.";
-        }
+        resultadoDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
     })
     .catch(error => {
         console.error('Erro ao buscar movimentação por data:', error);
     });
 }
+

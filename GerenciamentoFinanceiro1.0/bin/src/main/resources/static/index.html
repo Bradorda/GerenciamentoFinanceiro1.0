@@ -13,22 +13,19 @@
         <h2>Adicionar Movimentação</h2>
         <form id="movimentacaoForm">
             <label for="categoria">Categoria:</label>
-            <input type="number" id="categoria" name="categoria" required aria-label="Categoria"><br><br>
+            <input type="number" id="categoria" name="categoria" required><br><br>
             
             <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" name="descricao" required aria-label="Descrição"><br><br>
+            <input type="text" id="descricao" name="descricao" required><br><br>
             
             <label for="valor">Valor:</label>
-            <input type="number" id="valor" name="valor" step="0.01" required aria-label="Valor"><br><br>
+            <input type="number" id="valor" name="valor" step="0.01" required><br><br>
             
             <label for="tipo">Tipo:</label>
-            <select id="tipo" name="tipo" required aria-label="Tipo">
-                <option value="Receita">Receita</option>
-                <option value="Despesa">Despesa</option>
-            </select><br><br>
+            <input type="text" id="tipo" name="tipo" required><br><br>
             
             <label for="data">Data:</label>
-            <input type="date" id="data" name="data" required aria-label="Data"><br><br>
+            <input type="date" id="data" name="data" required><br><br>
             
             <button type="submit">Adicionar</button>
         </form>
@@ -36,7 +33,7 @@
 
     <div>
         <h2>Buscar Movimentação por Data</h2>
-        <input type="date" id="dataMovimentacao" placeholder="Data da Movimentação" aria-label="Buscar por Data">
+        <input type="date" id="dataMovimentacao" placeholder="Data da Movimentação">
         <button onclick="getMovimentacaoPorData()">Buscar</button>
         
         <div id="resultado"></div>

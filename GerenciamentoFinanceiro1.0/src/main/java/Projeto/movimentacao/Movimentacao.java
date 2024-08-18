@@ -1,7 +1,6 @@
 package Projeto.movimentacao;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
@@ -10,8 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 public class Movimentacao {
@@ -27,16 +24,14 @@ public class Movimentacao {
     private String descricao;
     private double valor;
     private String tipo;
-
-    @Temporal(TemporalType.DATE)
-    private Date data;
+    private LocalDate data;
 
     // Construtor padrão
     public Movimentacao() {
     }
 
     // Construtor com campos essenciais
-    public Movimentacao(Categoria categoria, String descricao, double valor, String tipo, Date data) {
+    public Movimentacao(Categoria categoria, String descricao, double valor, String tipo, LocalDate data) {
         this.categoria = categoria;
         this.descricao = descricao;
         this.valor = valor;
@@ -45,7 +40,7 @@ public class Movimentacao {
     }
 
     // Construtor com chave primária
-    public Movimentacao(int pk_movimentacao, Categoria categoria, String descricao, double valor, String tipo, Date data) {
+    public Movimentacao(int pk_movimentacao, Categoria categoria, String descricao, double valor, String tipo, LocalDate data) {
         this.pk_movimentacao = pk_movimentacao;
         this.categoria = categoria;
         this.descricao = descricao;
@@ -95,12 +90,12 @@ public class Movimentacao {
         this.tipo = tipo;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date Date) {
-        this.data = Date;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     @Override

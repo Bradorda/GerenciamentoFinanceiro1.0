@@ -10,7 +10,6 @@ import Projeto.model.MovimentacaoDAO;
 import Projeto.movimentacao.Movimentacao;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -78,16 +77,6 @@ public class MovimentacaoController {
 
     // Recuperar movimentacoes por data
     @GetMapping("/data")
-    public ResponseEntity<List<Movimentacao>> getMovimentacoesPorData(@RequestParam("data") Date data) {
-        List<Movimentacao> movimentacoes = movimentacaoDAO.retrieveByDate(data);
-        if (movimentacoes != null && !movimentacoes.isEmpty()) {
-            return new ResponseEntity<>(movimentacoes, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-    
-    @GetMapping("/data")
     public ResponseEntity<List<Movimentacao>> getMovimentacoesByDate(
         @RequestParam("data") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate data) {
         List<Movimentacao> movimentacoes = movimentacaoDAO.retrieveByDate(data);
@@ -98,4 +87,3 @@ public class MovimentacaoController {
         }
     }
 }
-

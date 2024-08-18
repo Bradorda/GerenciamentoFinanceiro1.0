@@ -20,7 +20,6 @@ public class CategoriaDAO {
     // Método para criar uma nova categoria
     public boolean create(Categoria categoria) {
         String sql = "INSERT INTO categoria(descricao) VALUES(?)";
-
         try {
             int rowsAffected = jdbcTemplate.update(sql, categoria.getDescricao());
             return rowsAffected > 0;
@@ -33,7 +32,6 @@ public class CategoriaDAO {
     // Método para atualizar uma categoria existente
     public boolean update(Categoria categoria) {
         String sql = "UPDATE categoria SET descricao = ? WHERE pk_categoria = ?";
-
         try {
             int rowsAffected = jdbcTemplate.update(sql, categoria.getDescricao(), categoria.getPk_categoria());
             return rowsAffected > 0;
@@ -46,7 +44,6 @@ public class CategoriaDAO {
     // Método para deletar uma categoria pelo ID
     public boolean delete(int pk_categoria) {
         String sql = "DELETE FROM categoria WHERE pk_categoria = ?";
-
         try {
             int rowsAffected = jdbcTemplate.update(sql, pk_categoria);
             return rowsAffected > 0;
@@ -59,7 +56,6 @@ public class CategoriaDAO {
     // Método para recuperar uma categoria pelo ID
     public Categoria retrieve(int pk_categoria) {
         String sql = "SELECT * FROM categoria WHERE pk_categoria = ?";
-
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{pk_categoria}, new CategoriaRowMapper());
         } catch (Exception e) {
@@ -71,7 +67,6 @@ public class CategoriaDAO {
     // Método para recuperar todas as categorias
     public List<Categoria> retrieveAll() {
         String sql = "SELECT * FROM categoria";
-
         try {
             return jdbcTemplate.query(sql, new CategoriaRowMapper());
         } catch (Exception e) {

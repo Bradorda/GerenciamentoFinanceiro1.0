@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento Financeiro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Gerenciamento Financeiro</h1>
+
+    <div>
+        <h2>Adicionar Movimentação</h2>
+        <form id="movimentacaoForm">
+            <label for="categoria">Categoria:</label>
+            <input type="number" id="categoria" name="categoria" required><br><br>
+            
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" name="descricao" required><br><br>
+            
+            <label for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" step="0.01" required><br><br>
+            
+            <label for="tipo">Tipo:</label>
+            <input type="text" id="tipo" name="tipo" required><br><br>
+            
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required><br><br>
+            
+            <button type="submit">Adicionar</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Buscar Movimentação por Data</h2>
+        <input type="date" id="dataMovimentacao" placeholder="Data da Movimentação">
+        <button onclick="getMovimentacaoPorData()">Buscar</button>
+        
+        <div id="resultado"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

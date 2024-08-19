@@ -7,7 +7,7 @@ function addMovimentacao() {
     const categoria = document.getElementById('categoria').value;
     const descricao = document.getElementById('descricao').value;
     const valor = document.getElementById('valor').value;
-    const tipo = document.getElementById('tipo').value;
+    const tipo = document.getElementById('tipo').value;  // Certifique-se de que o tipo seja capturado corretamente
     const data = document.getElementById('data').value;
 
     const movimentacao = {
@@ -44,8 +44,31 @@ function getMovimentacaoPorData() {
     .then(response => response.json())
     .then(data => {
         const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.innerHTML = '';  // Limpa a área antes de exibir novos resultados
+
         if (data.length > 0) {
-            resultadoDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            let table = `<table>
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Tipo</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+            data.forEach(movimentacao => {
+                table += `<tr>
+                            <td>${movimentacao.categoria.pk_categoria}</td>
+                            <td>${movimentacao.descricao}</td>
+                            <td>${movimentacao.valor}</td>
+                            <td>${movimentacao.tipo || 'Não especificado'}</td>
+                            <td>${movimentacao.data}</td>
+                          </tr>`;
+            });
+            table += `</tbody></table>`;
+            resultadoDiv.innerHTML = table;
         } else {
             resultadoDiv.innerHTML = "Nenhuma movimentação encontrada para a data especificada.";
         }

@@ -22,6 +22,10 @@ public class MovimentacaoController {
     // Criar uma nova movimentacao
     @PostMapping
     public ResponseEntity<Movimentacao> createMovimentacao(@RequestBody Movimentacao movimentacao) {
+        if (movimentacao.getTipo() == null || movimentacao.getTipo().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         boolean isCreated = movimentacaoDAO.create(movimentacao);
         if (isCreated) {
             return new ResponseEntity<>(movimentacao, HttpStatus.CREATED);
@@ -33,6 +37,10 @@ public class MovimentacaoController {
     // Atualizar uma movimentacao existente
     @PutMapping("/{id}")
     public ResponseEntity<Movimentacao> updateMovimentacao(@PathVariable("id") int id, @RequestBody Movimentacao movimentacao) {
+        if (movimentacao.getTipo() == null || movimentacao.getTipo().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         movimentacao.setPk_movimentacao(id);
         boolean isUpdated = movimentacaoDAO.update(movimentacao);
         if (isUpdated) {

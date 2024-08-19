@@ -8,8 +8,8 @@
 </head>
 <body>
     <h1>Gerenciamento Financeiro</h1>
-
-    <div>
+    
+    <div id="conteudo_centro">
         <h2>Adicionar Movimentação</h2>
         <form id="movimentacaoForm">
             <label for="categoria">Categoria:</label>
@@ -33,14 +33,13 @@
             <button type="submit">Adicionar</button>
         </form>
     </div>
-
-    <div>
+  
+    <aside>
         <h2>Buscar Movimentação por Data</h2>
         <input type="date" id="dataMovimentacao" placeholder="Data da Movimentação" aria-label="Buscar por Data">
-        <button onclick="getMovimentacaoPorData()">Buscar</button>
-        
+        <button onclick="getMovimentacaoPorData()">Buscar</button>    
         <div id="resultado"></div>
-    </div>
+    </aside>
 
     <script src="script.js"></script>
 </body>

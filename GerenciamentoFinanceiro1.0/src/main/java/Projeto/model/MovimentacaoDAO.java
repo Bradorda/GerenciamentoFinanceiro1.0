@@ -21,13 +21,14 @@ public class MovimentacaoDAO {
 
     // Método para criar uma nova movimentação
     public boolean create(Movimentacao movimentacao) {
-        String sql = "INSERT INTO movimentacao(data, descricao, valor, fk_categoria) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO movimentacao(data, descricao, valor, fk_categoria, tipo) VALUES(?, ?, ?, ?, ?)";
         try {
             int rowsAffected = jdbcTemplate.update(sql,
                 movimentacao.getData(),
                 movimentacao.getDescricao(),
                 movimentacao.getValor(),
-                movimentacao.getCategoria().getPk_categoria()
+                movimentacao.getCategoria().getPk_categoria(),
+                movimentacao.getTipo() // Incluindo o campo tipo
             );
             return rowsAffected > 0;
         } catch (Exception e) {
@@ -38,13 +39,14 @@ public class MovimentacaoDAO {
 
     // Método para atualizar uma movimentação existente
     public boolean update(Movimentacao movimentacao) {
-        String sql = "UPDATE movimentacao SET data = ?, descricao = ?, valor = ?, fk_categoria = ? WHERE pk_movimentacao = ?";
+        String sql = "UPDATE movimentacao SET data = ?, descricao = ?, valor = ?, fk_categoria = ?, tipo = ? WHERE pk_movimentacao = ?";
         try {
             int rowsAffected = jdbcTemplate.update(sql,
                 movimentacao.getData(),
                 movimentacao.getDescricao(),
                 movimentacao.getValor(),
                 movimentacao.getCategoria().getPk_categoria(),
+                movimentacao.getTipo(), // Incluindo o campo tipo
                 movimentacao.getPk_movimentacao()
             );
             return rowsAffected > 0;
@@ -107,12 +109,13 @@ public class MovimentacaoDAO {
         public Movimentacao mapRow(ResultSet rs, int rowNum) throws SQLException {
             Movimentacao movimentacao = new Movimentacao();
             movimentacao.setPk_movimentacao(rs.getInt("pk_movimentacao"));
-            movimentacao.setData(rs.getObject("data", LocalDate.class)); // Usando LocalDate
+            movimentacao.setData(rs.getObject("data", LocalDate.class));
             movimentacao.setDescricao(rs.getString("descricao"));
-            movimentacao.setValor(rs.getDouble("valor")); // Altere para BigDecimal se necessário
+            movimentacao.setValor(rs.getDouble("valor"));
             Categoria categoria = new Categoria();
             categoria.setPk_categoria(rs.getInt("fk_categoria"));
             movimentacao.setCategoria(categoria);
+            movimentacao.setTipo(rs.getString("tipo")); // Incluindo o campo tipo
             return movimentacao;
         }
     }

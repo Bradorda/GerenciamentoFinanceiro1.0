@@ -54,7 +54,8 @@ public class CategoriaDAO {
     }
 
     // Método para recuperar uma categoria pelo ID
-    public Categoria retrieve(int pk_categoria) {
+    @SuppressWarnings("deprecation")
+	public Categoria retrieve(int pk_categoria) {
         String sql = "SELECT * FROM categoria WHERE pk_categoria = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{pk_categoria}, new CategoriaRowMapper());

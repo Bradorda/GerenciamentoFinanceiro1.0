@@ -35,10 +35,31 @@
     </div>
   
     <aside>
-        <h2>Buscar Movimentação por Data</h2>
-        <input type="date" id="dataMovimentacao" placeholder="Data da Movimentação" aria-label="Buscar por Data">
-        <button onclick="getMovimentacaoPorData()">Buscar</button>    
-        <div id="resultado"></div>
+        <h2>Buscar Movimentação por Intervalo de Datas</h2>
+        <label for="dataInicio">Data Inicial:</label>
+        <input type="date" id="dataInicio" name="dataInicio" required aria-label="Data Inicial"><br><br>
+
+        <label for="dataFim">Data Final:</label>
+        <input type="date" id="dataFim" name="dataFim" required aria-label="Data Final"><br><br>
+        
+        <button onclick="buscarMovimentacoes()">Buscar</button>    
+        <div id="resultado">
+            <table id="tabelaMovimentacoes">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <p id="totalReceitas"></p>
+            <p id="totalDespesas"></p>
+            <p id="diferenca"></p>
+        </div>
     </aside>
 
     <script src="script.js"></script>

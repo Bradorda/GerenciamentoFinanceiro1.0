@@ -21,14 +21,14 @@ public class MovimentacaoDAO {
 
     // Método para criar uma nova movimentação
     public boolean create(Movimentacao movimentacao) {
-        String sql = "INSERT INTO movimentacao(data, descricao, valor, fk_categoria, tipo) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO movimentacao(data, descricao, valor, tipo, fk_categoria) VALUES(?, ?, ?, ?, ?)";
         try {
             int rowsAffected = jdbcTemplate.update(sql,
                 movimentacao.getData(),
                 movimentacao.getDescricao(),
                 movimentacao.getValor(),
-                movimentacao.getCategoria().getPk_categoria(),
-                movimentacao.getTipo() // Incluindo o campo tipo
+                movimentacao.getTipo(),  // Adicionado tipo
+                movimentacao.getCategoria().getPk_categoria()
             );
             return rowsAffected > 0;
         } catch (Exception e) {
@@ -39,14 +39,14 @@ public class MovimentacaoDAO {
 
     // Método para atualizar uma movimentação existente
     public boolean update(Movimentacao movimentacao) {
-        String sql = "UPDATE movimentacao SET data = ?, descricao = ?, valor = ?, fk_categoria = ?, tipo = ? WHERE pk_movimentacao = ?";
+        String sql = "UPDATE movimentacao SET data = ?, descricao = ?, valor = ?, tipo = ?, fk_categoria = ? WHERE pk_movimentacao = ?";
         try {
             int rowsAffected = jdbcTemplate.update(sql,
                 movimentacao.getData(),
                 movimentacao.getDescricao(),
                 movimentacao.getValor(),
+                movimentacao.getTipo(),  // Adicionado tipo
                 movimentacao.getCategoria().getPk_categoria(),
-                movimentacao.getTipo(), // Incluindo o campo tipo
                 movimentacao.getPk_movimentacao()
             );
             return rowsAffected > 0;
@@ -70,7 +70,7 @@ public class MovimentacaoDAO {
 
     // Método para recuperar uma movimentação pelo ID
     @SuppressWarnings("deprecation")
-	public Movimentacao retrieve(int pk_movimentacao) {
+    public Movimentacao retrieve(int pk_movimentacao) {
         String sql = "SELECT * FROM movimentacao WHERE pk_movimentacao = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{pk_movimentacao}, new MovimentacaoRowMapper());
@@ -91,12 +91,12 @@ public class MovimentacaoDAO {
         }
     }
 
-    // Método para recuperar movimentações por data
+    // Método para recuperar movimentações por intervalo de datas
     @SuppressWarnings("deprecation")
-	public List<Movimentacao> retrieveByDate(LocalDate data) {
-        String sql = "SELECT * FROM movimentacao WHERE data = ?";
+	public List<Movimentacao> retrieveByDateRange(LocalDate dataInicial, LocalDate dataFinal) {
+        String sql = "SELECT * FROM movimentacao WHERE data BETWEEN ? AND ?";
         try {
-            return jdbcTemplate.query(sql, new Object[]{data}, new MovimentacaoRowMapper());
+            return jdbcTemplate.query(sql, new Object[]{dataInicial, dataFinal}, new MovimentacaoRowMapper());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -112,10 +112,10 @@ public class MovimentacaoDAO {
             movimentacao.setData(rs.getObject("data", LocalDate.class));
             movimentacao.setDescricao(rs.getString("descricao"));
             movimentacao.setValor(rs.getDouble("valor"));
+            movimentacao.setTipo(rs.getString("tipo")); // Incluindo o campo tipo
             Categoria categoria = new Categoria();
             categoria.setPk_categoria(rs.getInt("fk_categoria"));
             movimentacao.setCategoria(categoria);
-            movimentacao.setTipo(rs.getString("tipo")); // Incluindo o campo tipo
             return movimentacao;
         }
     }

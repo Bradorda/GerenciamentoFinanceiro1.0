@@ -7,7 +7,7 @@ function addMovimentacao() {
     const categoria = document.getElementById('categoria').value;
     const descricao = document.getElementById('descricao').value;
     const valor = document.getElementById('valor').value;
-    const tipo = document.getElementById('tipo').value;  // Certifique-se de que o tipo seja capturado corretamente
+    const tipo = document.getElementById('tipo').value;
     const data = document.getElementById('data').value;
 
     const movimentacao = {
@@ -27,53 +27,57 @@ function addMovimentacao() {
         },
         body: JSON.stringify(movimentacao)
     })
-    .then(response => response.json())
-    .then(data => {
-        alert('Movimentação adicionada com sucesso: ' + JSON.stringify(data));
-        document.getElementById('movimentacaoForm').reset(); // Limpa o formulário após a adição
-    })
-    .catch(error => {
-        console.error('Erro ao adicionar movimentação:', error);
-    });
-}
-
-function getMovimentacaoPorData() {
-    const data = document.getElementById('dataMovimentacao').value;
-
-    fetch(`http://localhost:8081/movimentacoes/data?data=${data}`)
-    .then(response => response.json())
-    .then(data => {
-        const resultadoDiv = document.getElementById('resultado');
-        resultadoDiv.innerHTML = '';  // Limpa a área antes de exibir novos resultados
-
-        if (data.length > 0) {
-            let table = `<table>
-                            <thead>
-                                <tr>
-                                    <th>Categoria</th>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
-                                    <th>Tipo</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
-            data.forEach(movimentacao => {
-                table += `<tr>
-                            <td>${movimentacao.categoria.pk_categoria}</td>
-                            <td>${movimentacao.descricao}</td>
-                            <td>${movimentacao.valor}</td>
-                            <td>${movimentacao.tipo || 'Não especificado'}</td>
-                            <td>${movimentacao.data}</td>
-                          </tr>`;
-            });
-            table += `</tbody></table>`;
-            resultadoDiv.innerHTML = table;
+    .then(response => {
+        if (response.ok) {
+            alert('Movimentação adicionada com sucesso!');
+            buscarMovimentacoes(); // Atualizar tabela após adicionar
         } else {
-            resultadoDiv.innerHTML = "Nenhuma movimentação encontrada para a data especificada.";
+            alert('Erro ao adicionar movimentação');
         }
     })
     .catch(error => {
-        console.error('Erro ao buscar movimentação por data:', error);
+        console.error('Erro:', error);
+        alert('Erro ao adicionar movimentação');
+    });
+}
+
+function buscarMovimentacoes() {
+    const dataInicial = document.getElementById('dataInicio').value;
+    const dataFinal = document.getElementById('dataFim').value;
+
+    fetch(`http://localhost:8081/movimentacoes/data?dataInicial=${dataInicial}&dataFinal=${dataFinal}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const movimentacoes = data.movimentacoes || [];
+        const totalReceitas = data.totalReceitas || 0;
+        const totalDespesas = data.totalDespesas || 0;
+        const diferenca = data.diferenca || 0;
+
+        // Exibir as movimentações na tabela
+        const tabela = document.getElementById('tabelaMovimentacoes').getElementsByTagName('tbody')[0];
+        tabela.innerHTML = '';
+
+        movimentacoes.forEach(movimentacao => {
+            const row = tabela.insertRow();
+            row.insertCell(0).textContent = movimentacao.categoria.pk_categoria; // Assumindo que você deseja mostrar o ID da categoria
+            row.insertCell(1).textContent = movimentacao.descricao;
+            row.insertCell(2).textContent = movimentacao.valor.toFixed(2);
+            row.insertCell(3).textContent = movimentacao.tipo;
+            row.insertCell(4).textContent = movimentacao.data;
+        });
+
+        // Exibir os totais de receitas, despesas e a diferença
+        document.getElementById('totalReceitas').textContent = `Total de Receitas: R$ ${totalReceitas.toFixed(2)}`;
+        document.getElementById('totalDespesas').textContent = `Total de Despesas: R$ ${totalDespesas.toFixed(2)}`;
+        document.getElementById('diferenca').textContent = `Diferença: R$ ${diferenca.toFixed(2)}`;
+    })
+    .catch(error => {
+        console.error('Erro ao buscar movimentações:', error);
+        alert('Erro ao buscar movimentações');
     });
 }

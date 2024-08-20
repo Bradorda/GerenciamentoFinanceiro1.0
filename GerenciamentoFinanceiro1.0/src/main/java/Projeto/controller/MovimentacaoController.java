@@ -10,7 +10,9 @@ import Projeto.model.MovimentacaoDAO;
 import Projeto.movimentacao.Movimentacao;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/movimentacoes")
@@ -22,10 +24,6 @@ public class MovimentacaoController {
     // Criar uma nova movimentacao
     @PostMapping
     public ResponseEntity<Movimentacao> createMovimentacao(@RequestBody Movimentacao movimentacao) {
-        if (movimentacao.getTipo() == null || movimentacao.getTipo().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         boolean isCreated = movimentacaoDAO.create(movimentacao);
         if (isCreated) {
             return new ResponseEntity<>(movimentacao, HttpStatus.CREATED);
@@ -37,10 +35,6 @@ public class MovimentacaoController {
     // Atualizar uma movimentacao existente
     @PutMapping("/{id}")
     public ResponseEntity<Movimentacao> updateMovimentacao(@PathVariable("id") int id, @RequestBody Movimentacao movimentacao) {
-        if (movimentacao.getTipo() == null || movimentacao.getTipo().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         movimentacao.setPk_movimentacao(id);
         boolean isUpdated = movimentacaoDAO.update(movimentacao);
         if (isUpdated) {
@@ -83,15 +77,35 @@ public class MovimentacaoController {
         }
     }
 
-    // Recuperar movimentacoes por data
     @GetMapping("/data")
-    public ResponseEntity<List<Movimentacao>> getMovimentacoesByDate(
-        @RequestParam("data") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate data) {
-        List<Movimentacao> movimentacoes = movimentacaoDAO.retrieveByDate(data);
+    public ResponseEntity<Map<String, Object>> getMovimentacoesByDateRange(
+        @RequestParam("dataInicial") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicial,
+        @RequestParam("dataFinal") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFinal) {
+
+        List<Movimentacao> movimentacoes = movimentacaoDAO.retrieveByDateRange(dataInicial, dataFinal);
+        
         if (movimentacoes != null && !movimentacoes.isEmpty()) {
-            return new ResponseEntity<>(movimentacoes, HttpStatus.OK);
+            double totalReceitas = movimentacoes.stream()
+                .filter(m -> "Receita".equals(m.getTipo()))
+                .mapToDouble(Movimentacao::getValor)
+                .sum();
+
+            double totalDespesas = movimentacoes.stream()
+                .filter(m -> "Despesa".equals(m.getTipo()))
+                .mapToDouble(Movimentacao::getValor)
+                .sum();
+
+            double diferenca = totalReceitas - totalDespesas;
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("movimentacoes", movimentacoes);
+            response.put("totalReceitas", totalReceitas);
+            response.put("totalDespesas", totalDespesas);
+            response.put("diferenca", diferenca);
+
+            return ResponseEntity.ok(response);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         }
     }
 }
